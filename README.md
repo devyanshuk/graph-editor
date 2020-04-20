@@ -28,7 +28,7 @@ The File menu contains these menu items:
 
   4) __Quit__ - Exit the application.
 
-## A session of the application:
+## A visual session of the application:
 
 ![](graph-editor.png)
 
