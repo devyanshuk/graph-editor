@@ -1,4 +1,4 @@
-A weighted directed graph implementation in C#
+# A weighted directed graph implementation in C#
 
 The user can create new vertices by holding down Shift and clicking in the window.
 A new vertex will automatically be assigned the next available integer ID.
@@ -19,16 +19,16 @@ The user can also click and edit the weight of any edge. Any changes will be app
 
 The File menu contains these menu items:
 
-  1) New - Delete all vertices and edges, i.e. start over with a new graph.
+  1) __New__ - Delete all vertices and edges, i.e. start over with a new graph.
 
-  2) Open - Prompt the user for a filename, then read the graph from that file.
+  2) __Open__ - Prompt the user for a filename, then read the graph from that file.
 
-  3) Save - Save the graph to a file. If the graph was previously read from a file, it is saved back to that same file. 
+  3) __Save__ - Save the graph to a file. If the graph was previously read from a file, it is saved back to that same file. 
             If not, the program prompts the user for a filename where the graph should be saved.
 
-  4) Quit - Exit the application.
+  4) __Quit__ - Exit the application.
 
-## H2 A visual session of the application:
+## A session of the application:
 
 ![](graph-editor.png)
 
