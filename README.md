@@ -1,4 +1,4 @@
-A simple graph-editor implemented in C#
+A weighted directed graph implementation in C#
 
 The user can create new vertices by holding down Shift and clicking in the window.
 A new vertex will automatically be assigned the next available integer ID.
@@ -7,13 +7,15 @@ An any moment there may be a selected vertex, which appears black. All other ver
 A newly created vertex is automatically selected. The user can click any other vertex to select it. 
 If the user clicks in the window outside any vertices, then the selection is cleared, i.e. no vertices are selected.
 
-The user can hold down Control and click any vertex V to create an edge between the selected vertex and V. 
+The user can hold down Control and click any vertex V to create a directed edge between the selected vertex and V. 
 If there is already an edge between the selected vertex and V, then this action removes that edge.
 
 The user can click any vertex and drag it with the mouse to change its position. 
 As the vertex moves, all edges that are attached to it move as well.
 
 If the user presses the d key, the selected vertex is deleted, along with all edges that are attached to it.
+
+The user can also click and edit the weight of any edge. Any changes will be applied after pressing the Enter button or clicking anywhere else in the application window.
 
 The File menu contains these menu items:
 
@@ -25,6 +27,12 @@ The File menu contains these menu items:
             If not, the program prompts the user for a filename where the graph should be saved.
 
   4) Quit - Exit the application.
+
+## H2 A visual session of the application:
+
+![](graph-editor.png)
+
+
 
 
 
