@@ -1,4 +1,4 @@
-# A weighted directed graph implementation in C#
+## A weighted directed graph implementation in C#
 
 The user can create new vertices by holding down Shift and clicking in the window.
 A new vertex will automatically be assigned the next available integer ID.
@@ -17,7 +17,7 @@ If the user presses the d key, the selected vertex is deleted, along with all ed
 
 The user can also click and edit the weight of any edge. Any changes will be applied after pressing the Enter button or clicking anywhere else in the application window.
 
-The File menu contains these menu items:
+__The File menu contains these menu items:
 
   1. __New__ - Delete all vertices and edges, i.e. start over with a new graph.
 
