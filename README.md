@@ -24,7 +24,7 @@ __The File menu contains these menu items:__
   2. __Open__ - Prompt the user for a filename, then read the graph from that file.
 
   3. __Save__ - Save the graph to a file. If the graph was previously read from a file, it is saved back to that same file. 
-         <br />         If not, the program prompts the user for a filename where the graph should be saved.
+                If not, the program prompts the user for a filename where the graph should be saved.
 
   4. __Quit__ - Exit the application.
 
