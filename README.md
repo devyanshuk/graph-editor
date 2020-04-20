@@ -17,7 +17,7 @@ If the user presses the d key, the selected vertex is deleted, along with all ed
 
 The user can also click and edit the weight of any edge. Any changes will be applied after pressing the Enter button or clicking anywhere else in the application window.
 
-__The File menu contains these menu items:
+__The File menu contains these menu items:__
 
   1. __New__ - Delete all vertices and edges, i.e. start over with a new graph.
 
