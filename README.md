@@ -17,7 +17,7 @@ If the user presses the d key, the selected vertex is deleted, along with all ed
 
 The user can also click and edit the weight of any edge. Any changes will be applied after pressing the Enter button or clicking anywhere else in the application window.
 
-If a vertex is currently selected and the user holds down Shift and selects another vertex, the shortest path between the two vertices is displayed until the user clicks somewhere else in the application window. The program uses Dijkstra's algorithm to find the shortest path between two vertices. 
+If a vertex is currently selected and the user holds down Shift and selects another vertex, green lines indicating the shortest path between the two vertices is displayed until the user clicks somewhere else in the application window. The program uses Dijkstra's algorithm to find the shortest path between two vertices. 
 
 __The File menu contains these menu items:__
 
