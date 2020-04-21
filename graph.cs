@@ -17,9 +17,11 @@ class View : Window
     Graph g;
     Dictionary<int, Node> vd = new Dictionary<int, Node>();
     Dictionary<int, Dictionary<int, PointD>> sq = new Dictionary<int, Dictionary<int, PointD>>();
-    int selectedVert = 0;
+    int selectedVert = 0, currBiggestNum = 0, destination = 0;
     string path;
-    bool dotAlreadyUsed, updateWeight, blink, beingDragged;
+    BinaryHeap heap;
+    List<int> shortestPath = new List<int>();
+    bool dotAlreadyUsed, updateWeight, blink, beingDragged, findPath, displayPath;
     Tuple<int, int> weiToChange = new Tuple<int, int>(0, 0);
     List<string> weiToAdd = new List<string>();
     bool openResponse = true, saveResponse = true, newResponse = true, saved = true;
@@ -69,6 +71,9 @@ class View : Window
 
     void init(string text = "(untitled)")
     {
+        currBiggestNum = 0;
+        findPath = displayPath = false;
+        shortestPath.Clear();
         g = new Graph();
         var l = text.Split('/');
         Title = l[l.Length - 1];
@@ -170,6 +175,21 @@ class View : Window
         {
             if ((withinBoundary(a, vd[k].pos.X, vd[k].radius) && (withinBoundary(b, vd[k].pos.Y, vd[k].radius))))
             {
+                if (selectedVert != k && evnt.State == ModifierType.ShiftMask )
+                {
+                    displayPath = true;
+                    heap = new BinaryHeap();
+                    foreach (int i in vd.Keys)
+                    {
+                        if (i == selectedVert) heap.add(i, 0);
+                        else heap.add(i, double.PositiveInfinity);
+                    }
+                    heap.dijkstra(g, currBiggestNum, selectedVert);
+                    shortestPath = heap.display(selectedVert, k);
+                    QueueDraw();
+                    return true;
+                }
+                  
                 if (evnt.State == ModifierType.ControlMask && selectedVert != k && selectedVert != 0)
                 {
                     if (!g.addEdge(selectedVert, k, 0)) g.deleteEdge(selectedVert, k);
@@ -185,6 +205,7 @@ class View : Window
                 return true;
             }
         }
+
         foreach (int k in sq.Keys)
         {
             foreach (KeyValuePair<int, PointD> i in sq[k])
@@ -224,6 +245,7 @@ class View : Window
             {
                 saved = false;
                 int currNo = g.addVertex();
+                currBiggestNum = currNo;
                 vd.Add(currNo, new Node(currNo, mouseLocation));
                 selectedVert = currNo;
                 beingDragged = true;
@@ -235,6 +257,8 @@ class View : Window
         updateWeight = blink = false;
         weiToAdd.Clear();
         if (selectedVert > 0) selectedVert = 0;
+        shortestPath.Clear();
+        displayPath = false;
         QueueDraw();
         return true;
     }
@@ -309,6 +333,20 @@ class View : Window
                     c.Stroke();
                 }
             }
+
+            if (displayPath)
+            {
+                c.SetSourceRGB(0.0, 0.6, 0.0);
+                for (int v = 0; v <= shortestPath.Count - 2; v++)
+                {
+                    PointD from = vd[shortestPath[v]].pos;
+                    PointD to = vd[shortestPath[v + 1]].pos;
+                    c.MoveTo(from);
+                    c.LineTo(to);
+                    c.Stroke();
+                }
+            }
+        
             foreach (int k in vd.Keys)
             {
                 string s = k.ToString();
@@ -432,17 +470,20 @@ class View : Window
                         g.addVertex(from, to, weight);
                         addToDict(from, new PointD(x, y));
                         addToDict(to, new PointD(a, b));
+                        currBiggestNum = Math.Max(to, Math.Max(from, currBiggestNum));
                     }
                     else
                     {
                         double x = double.Parse(words[1]), y = double.Parse(words[2]);
                         g.addVertex(from);
                         if (!vd.ContainsKey(from)) vd.Add(from, new Node(from, new PointD(x, y)));
+                        currBiggestNum = Math.Max(from, currBiggestNum);
                     }
                 }
             }
             catch (FormatException) { handleError("Error loading file"); Title = t; return; }
         }
+
         QueueDraw();
     }
 
@@ -452,6 +493,130 @@ class View : Window
         View w = new View();
         w.ShowAll();
         Application.Run();
+    }
+}
+
+interface PriorityQueue
+{
+    int count { get; }
+    void add(int elem, double priority);
+    (int, double) extractMin();
+}
+
+class BinaryHeap : PriorityQueue
+{
+    class Node
+    {
+        public int elem;
+        public double pr;
+        public Node(int elem, double prio) { this.elem = elem; this.pr = prio; }
+    }
+
+    List<Node> lis = new List<Node>();
+    Dictionary<int, int> dict = new Dictionary<int, int>();
+    static int[] prev;
+    static double[] distFromSource;
+    static int parent(int i) => (i - 1) / 2;
+    static int left(int i) => 2 * i + 1;
+    static int right(int i) => 2 * i + 2;
+    static int c;
+    public int count => c;
+
+    public void dijkstra(Graph g, int num, int begin)
+    {
+        prev = new int[num + 1];
+        distFromSource = new double[num + 1];
+        for (int i = 1; i <= num; i++)
+        {
+            double val = double.PositiveInfinity;
+            if (i == begin) val = 0;
+            distFromSource[i] = val;
+        }
+        while (this.count > 0)
+        {
+            (int v, double v_dist) = extractMin();
+            foreach (KeyValuePair<int, double> a in g[v])
+            {
+                var newPriority = v_dist + a.Value;
+                if (distFromSource[a.Key] > newPriority)
+                {
+                    distFromSource[a.Key] = newPriority;
+                    lis[dict[a.Key]].pr = newPriority;
+                    prev[a.Key] = v;
+                    upHeap(dict[a.Key]);
+                }
+            }
+        }
+    }
+
+    void upHeap(int i)
+    {
+        while (true)
+        {
+            var m = lis[i].pr;
+            if (0 <= parent(i)) m = Math.Min(m, lis[parent(i)].pr);
+            if (m == lis[parent(i)].pr) break;
+            swap(i, parent(i));
+            i = parent(i);
+        }
+    }
+
+    public void add(int elem, double prio)
+    {
+        lis.Add(new Node(elem, prio)); c++;
+        int i = this.count - 1;
+        dict.Add(elem, i);
+        upHeap(i);
+    }
+
+    void swap(int a, int b)
+    {
+        var val = lis[a];
+        lis[a] = lis[b];
+        lis[b] = val;
+        var k = dict[lis[a].elem];
+        dict[lis[a].elem] = dict[lis[b].elem];
+        dict[lis[b].elem] = k;
+    }
+
+    public List<int> display(int n, int end)
+    {
+        List<int> d = new List<int>();
+        int i = end;
+        if (distFromSource[i] != double.PositiveInfinity)
+        {
+            string st = i.ToString();
+            var j = i;
+            while (true)
+            {
+                string currVert = prev[j].ToString();
+                if (j == n) break;
+                st = currVert + " " + st;
+                j = prev[j];
+            }
+            d = st.Split().ToList().Select(int.Parse).ToList();
+        }
+        return d;
+    }
+
+        public (int, double) extractMin()
+    {
+        var retVal = lis[0]; c--;
+        dict.Remove(lis[0].elem);
+        if (this.count == 0) { lis.RemoveAt(0); return (retVal.elem, retVal.pr); }
+        var lastVal = lis[lis.Count - 1]; lis.RemoveAt(lis.Count - 1);
+        lis[0] = lastVal; int i = 0;
+        dict[lis[0].elem] = i;
+        while (true)
+        {
+            var m = lis[i].pr;
+            if (left(i) < lis.Count) m = Math.Min(m, lis[left(i)].pr);
+            if (right(i) < lis.Count) m = Math.Min(m, lis[right(i)].pr);
+            if (m == lis[i].pr) break;
+            if (m == lis[left(i)].pr) { swap(i, left(i)); i = left(i); }
+            else { swap(i, right(i)); i = right(i); }
+        }
+        return (retVal.elem, retVal.pr);
     }
 }
 
