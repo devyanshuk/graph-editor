@@ -32,7 +32,7 @@ __The File menu contains these menu items:__
 
 ## A visual session of the application:
 
-![](graph.png)
+![](graph-editor.png)
 
 
 
