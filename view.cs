@@ -49,7 +49,7 @@ namespace graph
                 return i;
             }
 
-            EventHandler menuChanger(State s) { return (sender, args) => { state = s; handleStates(); QueueDraw(); }; }
+            EventHandler menuChanger(State s) => (sender, args) => { state = s; handleStates(); QueueDraw(); };
 
             MenuItem[] items = {
             makeItem("New", menuChanger(New)),
