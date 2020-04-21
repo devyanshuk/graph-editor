@@ -1,4 +1,4 @@
-﻿using Cairo;
+using Cairo;
 using Gdk;
 using Gtk;
 using System;
@@ -354,16 +354,13 @@ namespace graph
                     int radius = s.Length > 1 ? 10 * s.Length : 15;
                     vd[k].radius = radius;
                     c.MoveTo(vd[k].pos);
-
                     c.SetSourceRGB(1.0, 1.0, 1.0);
                     c.Arc(vd[k].pos.X, vd[k].pos.Y, radius, 0.0, 2 * Math.PI);
                     c.Fill();
-
                     c.SetSourceRGB(0.0, 0.0, 0.0);
                     c.Arc(vd[k].pos.X, vd[k].pos.Y, radius, 0.0, 2 * Math.PI);
                     if (k == selectedVert) c.Fill();
                     else c.Stroke();
-
                     c.SetFontSize(30);
                     var t = (k == selectedVert) ? (1.0, 1.0, 1.0) : (0.0, 0.0, 0.0);
                     c.SetSourceRGB(t.Item1, t.Item2, t.Item3);
