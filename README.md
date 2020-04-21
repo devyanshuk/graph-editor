@@ -1,4 +1,4 @@
-## A weighted directed graph implementation in C#
+### A weighted directed graph implementation in C#
 
 The user can create new vertices by holding down Shift and clicking in the window.
 A new vertex will automatically be assigned the next available integer ID.
