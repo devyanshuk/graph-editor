@@ -337,7 +337,7 @@ namespace graph
 
                 if (displayPath)
                 {
-                    c.SetSourceRGB(0.0, 0.6, 0.0);
+                    c.SetSourceRGB(0.0, 0.8, 0.0);
                     for (int v = 0; v <= shortestPath.Count - 2; v++)
                     {
                         PointD from = vd[shortestPath[v]].pos;
